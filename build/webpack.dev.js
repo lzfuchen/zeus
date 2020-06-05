@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   mode: 'development',
@@ -9,8 +10,50 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, '../dist'),
   },
+  module: {
+    rules:[
+      {
+        test: /\.vue$/,
+        use: [
+          'cache-loader',
+          {
+            loader: 'vue-loader',
+            options: {
+              compilerOptions: {
+                preserveWhitespace: false
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.js$/,
+        use: [
+          'cache-loader',
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            } 
+          }
+        ],
+        include: path.resolve(__dirname, '../src'),
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
+      }
+    ]
+  },
   plugins: [
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, '../public/index.html'),
+      filename: 'index.html',
+    }),
+    new VueLoaderPlugin()
   ],
   devtool: 'cheap-module-eval-source-map',
   devServer: {
