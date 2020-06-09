@@ -240,3 +240,24 @@ module.exports = {
 }
 ```
 
+## 静态资源
+
+安装url-loader file-loader
+```javascript
+npm i -D url-loader file-loader
+//webpack 添加 module rules
+{
+  test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+  loader: 'url-loader',
+  options: {
+    limit: 1024,
+    esModule: false,
+    fallback: {
+      loader: require.resolve('file-loader'),
+      options: {
+        name: "img/[name].[hash:8].[ext]"
+      }
+    }
+  }
+}
+```
