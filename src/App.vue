@@ -8,8 +8,10 @@ export default {
 }
 </script>
 
-<style scoped>
+
+<style>
 #app{
   color: red;
+  transform: translate(100px,100px);
 }
 </style>

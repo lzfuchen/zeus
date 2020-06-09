@@ -200,3 +200,43 @@ new Vue({
 
 //执行npm run dev 看看是否运行正常
 ```
+
+## css
+
+配置webpack对css的处理，使用css预处理语言(sass)，以及postcss插件autoprefixer。
+```javascript
+//安装packages
+npm i -D sass-loader node-sass postcss-loader autoprefixer
+//创建 postcss.config.js 文件内容如下：
+module.exports = {
+  plugins: [
+    require('autoprefixer')
+  ]
+}
+// plugins：可以是个数组，也可以是个对象
+module.exports = {
+  plugins:{
+    autoprefixer: {}
+  }
+}
+// 修改 webpack.dev.js 内容如下
+{
+  test: /\.css$/,
+  use: [
+    'vue-style-loader',
+    'css-loader',
+    'postcss-loader',
+  ],
+  exclude: /node_modules/,
+},
+{
+  test: /.scss$/,
+  use: [
+    'vue-style-loader',
+    'css-loader',
+    'postcss-loader',
+    'sass-loader'
+  ],
+  exclude: /node_modules/,
+}
+```
