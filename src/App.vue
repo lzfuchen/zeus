@@ -1,5 +1,7 @@
 <template>
-  <div id="app">vue is running</div>
+  <div id="app">
+    <img src="" alt="">
+  </div>
 </template>
 
 <script>
@@ -10,8 +12,5 @@ export default {
 
 
 <style>
-#app{
-  color: red;
-  transform: translate(100px,100px);
-}
+#app{}
 </style>

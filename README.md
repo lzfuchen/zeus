@@ -113,13 +113,11 @@ safari 7
 webpack.dev.js 配置 babel-loader
 ```javascript
 //安装
-npm install -D babel-loader cache-loader
-//cache-loader 可以缓存编译结果，提高编译性能
+npm install -D babel-loader
 //webpack.dev.js 增加 module，配置 rules
 {
   test: /\.js$/,
   use: [
-    'cache-loader',
     {
       loader: 'babel-loader',
       options: {
@@ -137,7 +135,8 @@ npm install -D babel-loader cache-loader
 ```javascript
 //安装packages
 npm i -S vue
-npm i -D vue-loader vue-template-compiler css-loader
+npm i -D vue-loader vue-template-compiler css-loader cache-loader
+//cache-loader 可以缓存编译结果，提高编译性能
 //配置 webpack.dev.js
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 {
@@ -240,3 +239,4 @@ module.exports = {
   exclude: /node_modules/,
 }
 ```
+

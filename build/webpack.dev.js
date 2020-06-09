@@ -29,7 +29,6 @@ module.exports = {
       {
         test: /\.js$/,
         use: [
-          'cache-loader',
           {
             loader: 'babel-loader',
             options: {
