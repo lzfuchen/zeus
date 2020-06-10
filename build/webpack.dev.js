@@ -1,9 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   mode: 'development',
+  cache: true,
   context: path.resolve(__dirname, '../'),
   entry: './src/main.js',
   output: {
@@ -13,7 +15,9 @@ module.exports = {
   resolve: {
     alias: {
       "@": path.resolve(__dirname, '../src')
-    }
+    },
+    extensions: ['.js', '.vue', '.json'],
+    modules: [path.resolve(__dirname, '../node_modules')]
   },
   module: {
     rules:[
@@ -107,6 +111,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new FriendlyErrorsWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
       filename: 'index.html',
