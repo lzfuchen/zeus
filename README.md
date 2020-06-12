@@ -263,3 +263,8 @@ npm i -D url-loader file-loader
 ```
 
 ## 配置eslint
+
+安装
+```
+npm install eslint --save-dev
+```
