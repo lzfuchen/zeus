@@ -264,7 +264,51 @@ npm i -D url-loader file-loader
 
 ## 配置eslint
 
-安装
-```
+```javascript
+//安装
 npm install eslint --save-dev
+//生成eslint配置文件
+npx eslint --init
+//eslint与 webpack集成
+npm i -D eslint-loader babel-eslint
+//修改webpack.dev.js
+module.export = {
+  module: {
+    rules:[
+      {
+        test: /\.(vue|(j|t)sx?)$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          extensions: [ '.js', '.jsx', '.vue' ],
+          cache: true,
+          emitWarning: true,
+          emitError: false
+        }
+      },
+    ]
+  }
+}
+//修改.eslintrc.js 增加parse： ‘babel-eslint’
+module.exports = {
+    root: true,
+    "env": {
+        "es2020": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:vue/essential"
+    ],
+    "parserOptions": {
+        parser: "babel-eslint",
+    },
+    "plugins": [
+        "vue"
+    ],
+    "rules": {
+        
+    }
+};
 ```
