@@ -261,3 +261,5 @@ npm i -D url-loader file-loader
   }
 }
 ```
+
+## 配置eslint
