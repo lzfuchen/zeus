@@ -312,3 +312,10 @@ module.exports = {
     }
 };
 ```
+
+## eslint 和 prettier 结合 格式化代码
+
+安装
+```javascript
+npm i -D prettier eslint-plugin-prettier eslint-config-prettier
+```

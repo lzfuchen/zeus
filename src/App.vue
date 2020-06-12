@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <img src="@/assets/test.jpeg" alt="">
-    <div @input="handleInput" ></div>
+    <img src="@/assets/test.jpeg" alt="" />
+    <div @input="handleInput"></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app',
-}
+  name: "app",
+  methods: {
+    hello() {
+      const arr = [2, 3, 4];
+    },
+  },
+};
 </script>
 
-
 <style>
-#app{}
+#app {
+}
 </style>
