@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <img src="@/assets/test.jpeg" alt="" />
-    <div @input="handleInput"></div>
   </div>
 </template>
 
