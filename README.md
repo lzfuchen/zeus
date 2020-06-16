@@ -1,61 +1,77 @@
 # zeus
-从0到1使用webpack搭建一个vue开发环境
+
+从 0 到 1 使用 webpack 搭建一个 vue 开发环境
 
 ## 项目初始化
 
-创建package.json 文件
+生成 package.json 文件
+
 ```javascript
-npm init 
+npm init
 ```
 
-## 安装webpack
+## 安装 webpack
+
 ```javascript
+// i 是 install 的缩写 -D 是 --save-dev 的缩写
 npm i -D webpack webpack-cli
 ```
 
-### 让程序先跑起来
-创建src文件夹，在下面新建main.js做为程序的入口文件。内容如下：
-```javascript
-console.log('让程序跑起来')
+## 让程序跑起来
+
+新建如下目录结构：
+
+```
+.
+├── build
+│   └── webpack.dev.js //webpack 测试脚本
+└── src
+    └── main.js // 程序入口文件
+
 ```
 
-创建build文件夹，在下面创建webpack.dev.js做为测试环境webpack配置文件。内容如下：
 ```javascript
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+//安装packages
+npm i -D html-webpack-plugin webpack-dev-server
+
+// html-webpack-plugin： 生成一个 HTML5 文件，其中包括使用 script 标签的 body 中的所有 webpack 包
+// webpack-dev-server： 相当于一个http服务。可以快速开发应用程序
+
+// webpack.dev.js 内容：
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: 'development',
-  context: path.resolve(__dirname, '../'),
-  entry: './src/main.js',
+  mode: "development",
+  context: path.resolve(__dirname, "../"),
+  entry: "./src/main.js",
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, '../dist'),
+    filename: "[name].js",
+    path: path.resolve(__dirname, "../dist"),
   },
-  plugins: [
-    new HtmlWebpackPlugin()
-  ],
-  devtool: 'cheap-module-eval-source-map',
+  plugins: [new HtmlWebpackPlugin()],
+  devtool: "cheap-module-eval-source-map",
   devServer: {
     hot: true,
     contentBase: path.join(__dirname, "../dist"),
     compress: true,
     overlay: {
       warnings: true,
-      errors: true
+      errors: true,
     },
-    quiet: true
+    quiet: true,
   },
-}
+};
 ```
-上面配置用到了两个插件：
-```javascript
-//安装插件
-//html-webpack-plugin 生成一个h5文件
-//webpack-dev-server 提供一个http服务
-npm i -D html-webpack-plugin webpack-dev-server
 
-//package.json 文件下增加scripts命令
+```javascript
+//main.js 内容：
+console.log("让程序跑起来");
+```
+
+```javascript
+//在 package.json 文件下增加 scripts 命令
 "dev": "webpack-dev-server --config ./build/webpack.dev.js",
 
 //执行命令程序就可以跑起来了
@@ -64,19 +80,21 @@ npm run dev
 
 ## babel
 
-上面的配置虽然可以让程序跑起来，但遇到不支持es6语法的浏览器还是会有问题，为了开心的使用es6语法，我们需要配置babel
+上面的配置虽然可以让程序跑起来，但遇到不支持 es6 语法的浏览器还是会有问题，为了开心的使用 es6 语法，我们需要配置 babel
 
-安装packages
+安装 packages
+
 ```javascript
-//es6 转 es5 提供polyfill
-npm install --save-dev @babel/core @babel/cli @babel/preset-env
+//es6 转 es5 提供 polyfill
+npm i -D @babel/core @babel/cli @babel/preset-env
 npm i -S core-js@3
 //注入helpers方法，节省代码大小
-npm i -D @babel/plugin-transform-runtime 
+npm i -D @babel/plugin-transform-runtime
 npm i -S @babel/runtime
 ```
 
 创建 .browserslistrc 文件 内容如下（可以根据项目需要修改）：
+
 ```javascript
 ie 10
 edge 17
@@ -87,6 +105,7 @@ safari 7
 ```
 
 创建 .babelrc 文件 内容如下：
+
 ```javascript
 {
   "presets": [
@@ -110,28 +129,37 @@ safari 7
   ]
 }
 ```
+
 webpack.dev.js 配置 babel-loader
+
 ```javascript
 //安装
 npm install -D babel-loader
 //webpack.dev.js 增加 module，配置 rules
-{
-  test: /\.js$/,
-  use: [
-    {
-      loader: 'babel-loader',
-      options: {
-        cacheDirectory: true
-      } 
-    }
-  ],
-  include: path.resolve(__dirname, '../src'),
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            }
+          }
+        ],
+        include: path.resolve(__dirname, '../src'),
+      }
+    ]
+  }
 }
 ```
 
 ## vue
 
-上面关于babel将es6转为es5已经配置好了，接下来我们配置vue
+上面关于 babel 将 es6 转为 es5 已经配置好了，接下来我们配置 vue
+
 ```javascript
 //安装packages
 npm i -S vue
@@ -202,7 +230,8 @@ new Vue({
 
 ## css
 
-配置webpack对css的处理，使用css预处理语言(sass)，以及postcss插件autoprefixer。
+配置 webpack 对 css 的处理，使用 css 预处理语言(sass)，以及 postcss 插件 autoprefixer。
+
 ```javascript
 //安装packages
 npm i -D sass-loader node-sass postcss-loader autoprefixer
@@ -242,7 +271,8 @@ module.exports = {
 
 ## 静态资源
 
-安装url-loader file-loader
+安装 url-loader file-loader
+
 ```javascript
 npm i -D url-loader file-loader
 //webpack 添加 module rules
@@ -262,7 +292,7 @@ npm i -D url-loader file-loader
 }
 ```
 
-## 配置eslint
+## 配置 eslint
 
 ```javascript
 //安装
@@ -308,7 +338,7 @@ module.exports = {
         "vue"
     ],
     "rules": {
-        
+
     }
 };
 ```
@@ -316,6 +346,7 @@ module.exports = {
 ## eslint 和 prettier 结合 格式化代码
 
 安装
+
 ```javascript
 npm i -D prettier eslint-plugin-prettier eslint-config-prettier
 
