@@ -10,8 +10,8 @@ export default {
   methods: {
     hello() {
       const arr = [2, 3, 4];
-    },
-  },
+    }
+  }
 };
 </script>
 

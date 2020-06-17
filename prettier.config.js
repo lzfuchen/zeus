@@ -7,5 +7,5 @@ module.exports = {
   bracketSpacing: true, //在对象文字中的括号之间打印空格
   arrowParens: "always", // 在单独的箭头函数参数周围包括括号
   htmlWhitespaceSensitivity: "ignore", // HTML文件的全局空格敏感度
-  endOfLine: "auto",
+  endOfLine: "auto"
 };

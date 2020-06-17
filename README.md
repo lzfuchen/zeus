@@ -37,6 +37,7 @@ npm i -D html-webpack-plugin webpack-dev-server
 
 // html-webpack-plugin： 生成一个 HTML5 文件，其中包括使用 script 标签的 body 中的所有 webpack 包
 // webpack-dev-server： 相当于一个http服务。可以快速开发应用程序
+// webpack.HotModuleReplacementPlugin: 模块热替换
 
 // webpack.dev.js 内容：
 const path = require("path");
@@ -50,7 +51,7 @@ module.exports = {
     filename: "[name].js",
     path: path.resolve(__dirname, "../dist"),
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin(), new webpack.HotModuleReplacementPlugin()],
   devtool: "cheap-module-eval-source-map",
   devServer: {
     hot: true,
@@ -141,16 +142,13 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true
-            }
-          }
-        ],
-        include: path.resolve(__dirname, '../src'),
-      }
+        exclude: /node_modules/,
+        include: path.resolve(__dirname, "../src"),
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+        },
+      },
     ]
   }
 }
@@ -167,27 +165,34 @@ npm i -D vue-loader vue-template-compiler css-loader cache-loader
 //cache-loader 可以缓存编译结果，提高编译性能
 //配置 webpack.dev.js
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-{
-  test: /\.vue$/,
-  use: [
-    'cache-loader',
-    {
-      loader: 'vue-loader',
-      options: {
-        compilerOptions: {
-          preserveWhitespace: false
-        }
+module.exports ={
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        use: [
+          'cache-loader',
+          {
+            loader: 'vue-loader',
+            options: {
+              compilerOptions: {
+                preserveWhitespace: false
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
       }
-    }
-  ]
-},
-{
-  test: /\.css$/,
-  use: [
-    'vue-style-loader',
-    'css-loader'
-  ]
+    ]
+  }
 }
+
 plugins: [
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, '../public/index.html'),
@@ -196,7 +201,6 @@ plugins: [
   new VueLoaderPlugin()
 ],
 //vue 一般挂载到一个 id 为 app 的 div上面，我们在public文件下面，新建 index.html，然后修改 HtmlWebpackPlugin 通过模版生成一个html文件
-
 // 到这里已经可以使用vue了，可以写个简单demo测试一下。
 //创建App.vue 内容如下：
 <template>
@@ -224,7 +228,6 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App)
 }).$mount('#app')
-
 //执行npm run dev 看看是否运行正常
 ```
 
@@ -276,18 +279,60 @@ module.exports = {
 ```javascript
 npm i -D url-loader file-loader
 //webpack 添加 module rules
-{
-  test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
-  loader: 'url-loader',
-  options: {
-    limit: 1024,
-    esModule: false,
-    fallback: {
-      loader: require.resolve('file-loader'),
-      options: {
-        name: "img/[name].[hash:8].[ext]"
-      }
-    }
+// 图片，媒体文件，字体文件处理都是一样的
+module.exports = {
+  module:{
+    rules: [
+          {
+          test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+          loader: "url-loader",
+          options: {
+            limit: 1024,
+            esModule: false,
+            fallback: {
+              loader: require.resolve("file-loader"),
+              options: {
+                name: "img/[name].[hash:8].[ext]",
+              },
+            },
+          },
+        },
+        {
+          test: /\.(svg)(\?.*)?$/,
+          loader: "file-loader",
+          options: {
+            name: "img/[name].[hash:8].[ext]"
+          }
+        },
+        {
+          test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+          loader: "url-loader",
+          options: {
+            limit: 1024,
+            esModule: false,
+            fallback: {
+              loader: require.resolve("file-loader"),
+              options: {
+                name: "media/[name].[hash:8].[ext]",
+              },
+            },
+          },
+        },
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+          loader: "url-loader",
+          options: {
+            limit: 1024,
+            esModule: false,
+            fallback: {
+              loader: require.resolve("file-loader"),
+              options: {
+                name: "fonts/[name].[hash:8].[ext]",
+              },
+            },
+          },
+        },
+    ]
   }
 }
 ```
@@ -350,7 +395,7 @@ module.exports = {
 ```javascript
 npm i -D prettier eslint-plugin-prettier eslint-config-prettier
 
-//新建.prettier.config.js
+//新建prettier.config.js
 module.exports = {
   printWidth: 100, //一行的字符数，如果超过会进行换行，默认为80
   tabWidth: 2, //一个tab代表几个空格数，默认为2

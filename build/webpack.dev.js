@@ -11,14 +11,15 @@ module.exports = {
   entry: "./src/main.js",
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "../dist"),
+    chunkFilename: "js/[name].js",
+    path: path.resolve(__dirname, "../dist")
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "../src"),
+      "@": path.resolve(__dirname, "../src")
     },
     extensions: [".js", ".vue", ".json"],
-    modules: [path.resolve(__dirname, "../node_modules")],
+    modules: [path.resolve(__dirname, "../node_modules")]
   },
   module: {
     noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/, // 忽略大型的 library 可以提高构建性能
@@ -31,38 +32,30 @@ module.exports = {
             loader: "vue-loader",
             options: {
               compilerOptions: {
-                preserveWhitespace: false,
-              },
-            },
-          },
-        ],
+                preserveWhitespace: false
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.js$/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              cacheDirectory: true,
-            },
-          },
-        ],
+        exclude: /node_modules/,
         include: path.resolve(__dirname, "../src"),
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true
+        }
       },
       {
         test: /\.css$/,
         use: ["vue-style-loader", "css-loader", "postcss-loader"],
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.scss$/,
-        use: [
-          "vue-style-loader",
-          "css-loader",
-          "postcss-loader",
-          "sass-loader",
-        ],
-        exclude: /node_modules/,
+        use: ["vue-style-loader", "css-loader", "postcss-loader", "sass-loader"],
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
@@ -73,10 +66,17 @@ module.exports = {
           fallback: {
             loader: require.resolve("file-loader"),
             options: {
-              name: "img/[name].[hash:8].[ext]",
-            },
-          },
-        },
+              name: "img/[name].[hash:8].[ext]"
+            }
+          }
+        }
+      },
+      {
+        test: /\.(svg)(\?.*)?$/,
+        loader: "file-loader",
+        options: {
+          name: "img/[name].[hash:8].[ext]"
+        }
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
@@ -87,10 +87,10 @@ module.exports = {
           fallback: {
             loader: require.resolve("file-loader"),
             options: {
-              name: "media/[name].[hash:8].[ext]",
-            },
-          },
-        },
+              name: "media/[name].[hash:8].[ext]"
+            }
+          }
+        }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
@@ -101,30 +101,40 @@ module.exports = {
           fallback: {
             loader: require.resolve("file-loader"),
             options: {
-              name: "fonts/[name].[hash:8].[ext]",
-            },
-          },
-        },
-      },
-    ],
+              name: "fonts/[name].[hash:8].[ext]"
+            }
+          }
+        }
+      }
+    ]
   },
   plugins: [
     new webpack.DefinePlugin({
       "process.env": {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV || ""),
-      },
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || "")
+      }
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
-        messages: [`App running at: http://localhost:8080`],
-      },
+        messages: [`App running at: http://localhost:8080`]
+      }
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../public/index.html"),
-      filename: "index.html",
+      filename: "index.html"
     }),
-    new VueLoaderPlugin(),
+    new VueLoaderPlugin()
   ],
+  //node选项可以防止node包，还有 setImmediate 的 profill注入到代码中
+  node: {
+    setImmediate: false,
+    dgram: "empty",
+    fs: "empty",
+    net: "empty",
+    tls: "empty",
+    child_process: "empty"
+  },
   devtool: "cheap-module-eval-source-map",
   devServer: {
     open: true,
@@ -133,8 +143,8 @@ module.exports = {
     compress: true,
     overlay: {
       warnings: true,
-      errors: true,
+      errors: true
     },
-    quiet: true,
-  },
+    quiet: true
+  }
 };
